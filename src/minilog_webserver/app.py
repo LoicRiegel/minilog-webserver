@@ -42,4 +42,4 @@ def logs():
 @app.route("/")
 def hello_world():
     """Home route that displays the logs."""
-    return render_template("log_page.html", messages=received_logs)
+    return render_template("log_page.html")

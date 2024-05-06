@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Log viewer</title>
     <style>
         body {
@@ -26,7 +27,7 @@
 
         .log-box {
             width: 80%;
-            height: 400px;
+            height: 600px;
             margin: 0 auto;
             border: 1px solid #ccc;
             overflow: auto;
@@ -44,13 +45,40 @@
     </style>
 </head>
 <body>
+
     <div class="container">
         <div class="title">Received logs</div>
-        <div class="log-box">
-            {% for message in messages %}
-                <div class="log-message">{{ message }}</div>
-            {% endfor %}
+        <div class="log-box" id="logBox">
+            <!-- Log messages will be displayed here -->
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            // Function to update log box with latest log data
+            function updateLogBox() {
+                // Send GET request to fetch log data from the server
+                $.get('/logs', function(data) {
+                    const logBox = $('#logBox');
+                    logBox.empty();
+
+                    const logs = data.logs;
+
+                    logs.forEach(function(log) {
+                        // Create a new div element for the log message and append it to the log box
+                        const logMessageDiv = $('<div class="log-message"></div>').text(log);
+                        logBox.append(logMessageDiv);
+                    });
+                });
+            }
+
+            // Initial call to populate
+            updateLogBox();
+
+            // Update periodically
+            setInterval(updateLogBox, 500);
+        });
+    </script>
+
 </body>
 </html>

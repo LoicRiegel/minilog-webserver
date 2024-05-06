@@ -1,41 +1,25 @@
 """Entry point of the web server application."""
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, abort, jsonify, render_template, request
 
 app = Flask(__name__)
 
 
-received_logs: list[str] = [
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 - 1",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 - 2",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 - 3",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-    "127.0.0.1 - - [06/May/2024 10:17:46] GET /favicon.ico HTTP/1.1 404 -",
-]
+received_logs: list[str] = []
 
 
-@app.route("/logs", methods=["GET"])
+@app.route("/logs", methods=["GET", "POST", "DELETE"])
 def logs():
-    """Route to expose the received logs."""
+    """Expose the received logs."""
+    match request.method:
+        case "DELETE":
+            received_logs.clear()
+        case "POST":
+            try:
+                new_logs = request.json["logs"]
+            except KeyError:
+                abort(400, f"""Received invalid JSON! Use format {"logs": ["log 1", "log2", ...]}""")
+            received_logs.extend(new_logs)
     return jsonify({"logs": received_logs})
 
 

@@ -13,7 +13,6 @@ extend-select = [
     "Q",
     "W",
     "C90",
-    "ANN",
     "BLE",
     "ERA",
     "FA",

@@ -17,7 +17,7 @@ LOGS_ROUTE = f"{BASE_URL}/logs"
 assert LOGS_ROUTE == "http://localhost:5000/logs"
 resp = requests.get(LOGS_ROUTE)
 if resp.ok:
-    print("GET response:")
+    print(f"GET response: SUCCESS ({resp.status_code})")
     pprint(resp.json())
 else:
     print(f"GET request to {LOGS_ROUTE} failed with status {resp.status_code}")
@@ -33,15 +33,14 @@ new_logs = {
 }
 resp = requests.post(LOGS_ROUTE, json=new_logs)
 if resp.ok:
-    print("POST response:")
-    pprint(resp.json())
+    print(f"POST response: SUCCESS ({resp.status_code})")
 else:
     print(f"POST request to {LOGS_ROUTE} failed with status {resp.status_code}")
+
 
 # Delete all logs
 resp = requests.delete(LOGS_ROUTE, json=new_logs)
 if resp.ok:
-    print("DELETE response:")
-    pprint(resp.json())
+    print(f"DELETE response: SUCCESS ({resp.status_code})")
 else:
     print(f"DELETE request to {LOGS_ROUTE} failed with status {resp.status_code}")

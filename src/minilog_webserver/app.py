@@ -14,13 +14,16 @@ def logs():
     match request.method:
         case "DELETE":
             received_logs.clear()
+            return "", 200
         case "POST":
             try:
                 new_logs = request.json["logs"]
             except KeyError:
-                abort(400, f"""Received invalid JSON! Use format {"logs": ["log 1", "log2", ...]}""")
+                abort(400)
             received_logs.extend(new_logs)
-    return jsonify({"logs": received_logs})
+            return "", 201
+        case "GET":
+            return jsonify({"logs": received_logs})
 
 
 @app.route("/")

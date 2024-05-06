@@ -39,7 +39,7 @@ else:
 
 
 # Delete all logs
-resp = requests.delete(LOGS_ROUTE, json=new_logs)
+resp = requests.delete(LOGS_ROUTE)
 if resp.ok:
     print(f"DELETE response: SUCCESS ({resp.status_code})")
 else:
